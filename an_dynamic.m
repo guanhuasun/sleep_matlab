@@ -1,4 +1,4 @@
-function [fire_ind,x_new] = an_dynamic(x,g_NMDA,tau_Ca,input_exc,input_inh,dt,sigma_noise)%,N_neuron,old_fire_ind,with_noise)
+function [fire_ind,x_new] = an_dynamic(x,g_NMDA,tau_Ca,w,n_up,dt)%,N_neuron,old_fire_ind,with_noise)
 
 %SAN model without input
 %   x:  dimension x = (V,h_Na,n_K,h_A,m_Ks,C_Ca,s_AMPA, s_NMDA, x_NMDA, s_GABA)
@@ -117,23 +117,27 @@ I_AMPA = g_AMPA.*s_AMPA.*(V-V_AMPA);
 I_NMDA = g_NMDA.*s_NMDA.*(V-V_NMDA);
 I_GABA = g_GABA.*s_GABA.*(V-V_GABA);
 
-
+%
+%I_AMPA=sum(w.*I_AMPA_N,1)';
+%I_NMDA=sum(w.*I_NMDA_N,1)';
+%I_GABA=sum(w.*I_GABA_N,1)';
 
 I_syn=I_NMDA+I_GABA+I_AMPA;
 
 
     
-% f_V=1./(1+exp(-(V-20)/2));
+f_V=1./(1+exp(-(V-20)/2));
+% V_copy=V;
+% V_copy(old_fire_ind)=-1000;
+fire_ind=find(V>0);
 
-% fire_ind=find(V>0);
-fire_ind=[];
 %f_V(old_fire_ind)=0;
 %f_V=f_V.*(f_V>-3.0590e-07);
 
 %f_V=(f_V'*(w+eye(N_neuron))./(n_conn+1))';
 
-% f_V=(f_V'*w./n_up)';
-% f_V(isnan(f_V)) = 0;
+f_V=(f_V'*w./n_up)';
+f_V(isnan(f_V)) = 0;
 
 
 %w_i=sum_j(w_ji)/n_i, I also include the neuron itself in the average to
@@ -154,10 +158,10 @@ dCadt = -alphaCa .* (10 * A * I_Ca+I_NMDA) - C_Ca ./ tau_Ca;
 % if max(abs(dCadt))>100 
 %     pause
 % end
-ds_AMPAdt=3.48*input_exc-s_AMPA./tau_AMPA;
+ds_AMPAdt=3.48*f_V-s_AMPA./tau_AMPA;
 ds_NMDAdt=0.5*x_NMDA.*(1-s_NMDA)-s_NMDA./tau_sNMDA;
-dx_NMDAdt=3.48*input_exc-x_NMDA./tau_xNMDA;
-ds_GABAdt=input_inh-s_GABA./tau_GABA;
+dx_NMDAdt=3.48*f_V-x_NMDA./tau_xNMDA;
+ds_GABAdt=f_V-s_GABA./tau_GABA;
 
 
 advvel = [dVdt dh_Nadt dn_Kdt dh_Adt dm_KSdt dCadt ...
