@@ -4,7 +4,7 @@ N_neuron=250;
 lamda_exc=0.009;lamda_inh=0.001;
 
 % n_conn_exc=N_neuron^2*lamda_exc;n_conn_inh=N_neuron^2*lamda_inh;
-T=20000;
+T=5000;
 write_dt=4;
 num_frame=ceil(T/write_dt);
 v_data=zeros(num_frame,N_neuron);
@@ -13,16 +13,16 @@ tau_Ca=121;
 cal_data=v_data;
 % w_max=1.3;
 w_min=0;
-for theta_p=23.5
-theta_d=22; 
+for theta_p=24
+theta_d=23.5; 
 tau=20;
 gamma_p=300;
 gamma_d=200;
 for w_max=2
-dirname=("../"+sprintf('e%gi%g',lamda_exc,lamda_inh));
+dirname=("../matlab_data1");
 simname=sprintf('n%up%ud%ugp%ugp%utau%uw_max%gw_min%g',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min);
 
-%  simname =   'testw1'
+ simname =   'testw0.7'
 
 foldername=fullfile(dirname,simname);
 % foldername=sprintf('n%up%ud%ugp%ugp%utau%uw_max%gw_min%g',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min);
