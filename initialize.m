@@ -1,4 +1,14 @@
-connection; %making connectivity matrix w
+%making connectivity matrix w
+[w_exc,offset_exc, indices_exc,pre_exc,post_exc,wind_exc]=connection(lamda_exc,N_neuron);
+[w_inh,offset_inh, indices_inh,pre_inh,post_inh,wind_inh]=connection(lamda_inh,N_neuron);
+
+n_pre_exc=sum(w_exc,1);
+n_post_exc=sum(w_exc,2);
+n_conn_exc=sum(n_pre_exc);
+
+n_pre_inh=sum(w_inh,1);
+n_post_inh=sum(w_inh,2);
+n_conn_inh=sum(n_pre_inh);
 
 
 %all initial conditions are taken from Tatsuki et al,2016

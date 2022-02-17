@@ -3,7 +3,7 @@ N_neuron=250; %number of neurons
 lamda_exc=0.02;lamda_inh=0.004;
 
 dt=0.04;
-T=20000;
+T=5000;
 g_NMDA=0.004;%0.0038;
 tau_Ca=121;
 write_dt=4;
@@ -18,10 +18,10 @@ for w_max=[2]
     for w_min=0
         % for w_val=1.5
         w_val=1;
-        for theta_p=[23:0.2:24]
+        for theta_p=[23]
             for theta_gap=[0.1:0.2:1] 
-                theta_d=theta_p-theta_gap;
-                for tau=[20,100]
+                theta_d=[22] 
+                for tau=[20]
                     initialize
                     gamma_p=300;
                     gamma_d=200;
@@ -54,9 +54,9 @@ for w_max=[2]
                             input_inh=syn_input(w_inh,n_pre_inh,v);
 
                             [fire_ind,x]=an_dynamic(x,g_NMDA,tau_Ca,input_exc,input_inh,dt,sigma_noise);%N_neuron,fire_ind,with_noise);
-%                             if mod(t_sim,1)==0
-%                                 fire_count(fire_ind)=fire_count(fire_ind)+1;
-%                             end
+                            if mod(t_sim,1)==0
+                                fire_count(fire_ind)=fire_count(fire_ind)+1;
+                            end
                             v=x(:,1);
                             c_ca=x(:,6);
                             h_Na = x(:,2);
