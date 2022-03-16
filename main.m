@@ -1,12 +1,15 @@
 clear
-N_neuron=250; %number of neurons
-lamda_exc=0.02;lamda_inh=0.004;
-
+N_neuron=100; %number of neurons
 dt=0.04;
-T=20000;
-g_NMDA=0.004;%0.0038;
+T=5000;
+g_NMDA=0.004;%0.004;%0.0038;
 tau_Ca=121;
 write_dt=4;
+
+for lamda=[0.1]
+% r_exc=5;
+r_inh=1;
+% lamda=0.01;
 
 %w=eye(N_neuron);
 %w=[0 1;1 0];
@@ -14,26 +17,31 @@ write_dt=4;
 %x(:,1)=randn(N_neuron,1).*x(:,1);
 num_t=1;
 with_noise=0;
-for w_max=[2]
-    for w_min=0
-        % for w_val=1.5
-        w_val=1;
-        for theta_p=[23:0.2:24]
-            for theta_gap=[0.1:0.2:1] 
+for r_exc=[8]
+    w_max=2;
+    for theta_p=[15]
+        w_min=0;
+        w_exc_ini=1.8;
+        w_inh_ini=1.8;
+        for gamma_p=[200] 
+%             theta_p=[23.6];
+            for theta_gap=[0.5]
                 theta_d=theta_p-theta_gap;
-                for tau=[20,100]
+                for tau=20
                     initialize
-                    gamma_p=300;
                     gamma_d=200;
                     sigma_noise=5;
                     result=zeros(ceil(T/write_dt),11);
                     w_list=zeros(ceil(T/write_dt),N_neuron);
-                    weights_exc=w_val*ones(n_conn_exc,1);
-                    weights_inh=w_val*ones(n_conn_inh,1);
-                    %foldername='test';
-                    dirname=("../"+sprintf('e%gi%g',lamda_exc,lamda_inh));
-                    simname=sprintf('n%up%ud%ugp%ugp%utau%uw_max%gw_min%g',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min)
-%                      simname='testw1';
+                     weights_exc= w_exc_ini*ones(n_conn_exc,1);
+                     weights_inh=w_inh_ini*ones(n_conn_inh,1);
+%                     weights_exc=[1;3];
+%                     weights_inh=[3;1];
+                    
+                    dirname='../n10';
+                   %dirname=("../"+sprintf('e%ui%ulam%g',r_exc,r_inh,lamda));
+                   % simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%g',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min)
+                      simname='test';
                     foldername=fullfile(dirname,simname);
                     %foldername=sprintf("n%ug%gtau_ca%uw%g",N_neuron,g_NMDA,tau_Ca,w_val);
                     mkdir(foldername);
@@ -63,8 +71,8 @@ for w_max=[2]
                             [cal_syn_exc,weights_exc]=cal_update(weights_exc,w_max,w_min,pre_exc,post_exc,c_ca,theta_p,theta_d,gamma_p,gamma_d,tau,dt,kaiguan);    
                             [cal_syn_inh,weights_inh]=cal_update(weights_inh,w_max,w_min,pre_inh,post_inh,c_ca,theta_p,theta_d,gamma_p,gamma_d,tau,dt,kaiguan); 
 
-                            if t_sim>2000
-                                kaiguan=0;
+                            if t_sim>5000
+                                kaiguan=1;
                             end
 
                             if mod(t_sim,write_dt)==0
@@ -90,6 +98,7 @@ for w_max=[2]
             end
         end
     end
+end
 end
 
 % plot(result(:,1),result(:,2),'LineWidth',2)
