@@ -1,4 +1,4 @@
-function [fire_ind,x_new] = an_dynamic(x,g_NMDA,tau_Ca,input_exc,input_inh,dt,sigma_noise)%,N_neuron,old_fire_ind,with_noise)
+function [vel] = an_dynamic(x,g_NMDA,tau_Ca,input_exc,input_inh,sigma_noise)%,N_neuron,old_fire_ind,with_noise)
 
 %SAN model without input
 %   x:  dimension x = (V,h_Na,n_K,h_A,m_Ks,C_Ca,s_AMPA, s_NMDA, x_NMDA, s_GABA)
@@ -16,7 +16,6 @@ s_NMDA = x(:,8);
 x_NMDA = x(:,9);
 s_GABA = x(:,10);
 
-
 if min(h_Na)<0 || min(n_K)<0
     pause
 end
@@ -28,7 +27,6 @@ V_Na = 55;
 V_K = -100;
 V_Ca = 120;
 K_D = 30;
-
 
 alphaCa = 0.5;
 alpha_n = 0.01 * (V + 34) ./ (1 - exp(-(V + 34) / 10));
@@ -47,10 +45,6 @@ beta_m = 4 * exp(-(V+53.7)/12);
 alpha_h = 0.07 * exp (-(V+50) / 10);
 beta_h = 1 ./ (1 + exp(-(V+20) / 10));
 
-
-
-
-
 g_L = 0.03573;
 g_Na = 12.2438;
 g_K = 2.61868;
@@ -65,12 +59,7 @@ V_AMPA=0;
 V_NMDA=0;
 V_GABA=-70;
 g_AMPA = 0.513435;
-
 g_GABA = 0.00252916;
-%g_GABA=0;
-%g_AMPA=0;
-%g_NMDA=0;
-
 
 tau_hA = 15;
 tau_mKS = 8 ./ (exp(-(V+55)/30) + exp((V+55)/30));
@@ -78,16 +67,6 @@ tau_AMPA=2;
 tau_sNMDA=100;
 tau_xNMDA=2;
 tau_GABA=10;
-%tau_Ca=121.403/2; %original value is 121.403
-%tau_Ca_list=[121.403/2 121.4*6]; %from wake to sleep
-% if wake
-%     tau_Ca=121.4/2;
-% else
-%     tau_Ca=121.4*6;
-% end
-% if t_sim==59.7
-%     pause;
-% end
  
 
 m_Nainf = alpha_m./(alpha_m+beta_m);
@@ -109,10 +88,6 @@ I_KCa = g_KCa .* m_KCainf .* (V-V_K);
 I_NaP = g_NaP * m_NaPinf.^3 .* (V-V_Na);
 I_AR = g_AR .* h_ARinf .* (V-V_K);
 
-%   I_NMDA=syn_current(:,1);
-%   I_AMPA=syn_current(:,2);
-%   I_GABA=syn_current(:,3);
-
 I_AMPA = g_AMPA.*s_AMPA.*(V-V_AMPA);
 I_NMDA = g_NMDA.*s_NMDA.*(V-V_NMDA);
 I_GABA = g_GABA.*s_GABA.*(V-V_GABA);
@@ -126,7 +101,7 @@ I_syn=I_NMDA+I_GABA+I_AMPA;
 % f_V=1./(1+exp(-(V-20)/2));
 
 % fire_ind=find(V>0);
-fire_ind=[];
+%fire_ind=[];
 %f_V(old_fire_ind)=0;
 %f_V=f_V.*(f_V>-3.0590e-07);
 
@@ -160,18 +135,17 @@ dx_NMDAdt=3.48*input_exc-x_NMDA./tau_xNMDA;
 ds_GABAdt=input_inh-s_GABA./tau_GABA;
 
 
-advvel = [dVdt dh_Nadt dn_Kdt dh_Adt dm_KSdt dCadt ...
+vel = [dVdt dh_Nadt dn_Kdt dh_Adt dm_KSdt dCadt ...
     ds_AMPAdt ds_NMDAdt dx_NMDAdt ds_GABAdt];
-if ~isreal(advvel)
+if ~isreal(vel)
     pause;
 end
 
-x_new=x+advvel*dt;
-h_Na_new = x_new(:,2);
+% x_new=x+advvel*dt;
+% h_Na_new = x_new(:,2);
 
-if min(h_Na_new)<0 || max(h_Na_new)>1
-    pause
-    
-end
+% if min(h_Na_new)<0 || max(h_Na_new)>1
+%     pause
+% end
 
 end

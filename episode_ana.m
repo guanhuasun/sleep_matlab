@@ -1,19 +1,19 @@
-close all
+ %close all
 %r_exc=9;
 r_inh=1;
 plot_dt=0.004; %in second
 % v_avg=mean(v_data,2);
-t_begin=520;
-t_end=570;
+t_begin=0;
+t_end=T/1000;
 t_check=[t_begin,t_end]; %enter all time we want to check the synaptic weight distribution
 N_sample=250;
 N_exc=ceil(r_exc/(r_exc+r_inh)*N_sample);
 N_inh=N_sample-N_exc;
-firsttime=0;
+firsttime=1;
 mean_window=5; %second
 mean_window=mean_window/plot_dt; %indices 
 fig_ind=1;
-w_plot=1; w_stats_plot=0;cal_plot=1;cal_stats_plot=1;raster_plot=0;v_plot=0;spec_plot=1;fire_rate_plot=0;sync_plot=0;
+w_plot=1; w_stats_plot=0;cal_plot=1;s_plot=0;cal_stats_plot=1;raster_plot=0;v_plot=1;spec_plot=0;fire_rate_plot=0;sync_plot=0;
 if firsttime
     w_exc_stats=[mean(w_exc_data,2) median(w_exc_data,2) std(w_exc_data,[],2) ];
     w_inh_stats=[mean(w_inh_data,2) median(w_inh_data,2) std(w_inh_data,[],2) ];
@@ -34,8 +34,8 @@ if firsttime
 end
 
 
-t_vec=t_begin:plot_dt:t_end;
-ind_begin=t_begin/plot_dt;
+t_vec=t_begin:plot_dt:t_end-plot_dt;
+ind_begin=t_begin/plot_dt+1;
 ind_end=t_end/plot_dt;
 p_line=theta_p*ones(length(t_vec),1);
 d_line=theta_d*ones(length(t_vec),1);
@@ -47,6 +47,7 @@ if w_plot==1
     plot(t_vec,[w_inh_stats(ind_begin:ind_end,1) w_inh_stats_95(ind_begin:ind_end) w_inh_stats_5(ind_begin:ind_end)],'-.','LineWidth',1.5)
     xlim([t_begin t_end])
     grid on
+    title(simname)
     fig_ind=fig_ind+1;
 end
 
@@ -56,6 +57,7 @@ if w_stats_plot==1
     hold on
     plot(t_vec,abs(w_inh_stats_movmean(ind_begin:ind_end,3)./w_inh_stats_movmean(ind_begin:ind_end,1)),'-.','LineWidth',2)
     grid on
+     title(simname)
     xlim([t_begin t_end])
     xlabel('Time/s');
     ylabel('W Std')
@@ -72,11 +74,30 @@ if cal_plot==1
     hold on
     plot(t_vec,[p_line d_line])
     xlim([t_begin t_end])
-    ylim([theta_d-2 theta_p+2])
+    ylim([theta_d-10 theta_p+2])
     grid on
+     title(simname)
     fig_ind=fig_ind+1;
         xlabel('Time/s');
+        set(gca,'FontSize',25)
     xlim([t_begin t_end])
+end
+
+if s_plot==1
+    h(fig_ind)=figure;
+     plot(t_vec,s_AMPA_data(ind_begin:ind_end,:));
+%      hold on
+%     plot(t_vec,s_GABA_data(ind_begin:ind_end,1:10:end));
+%     hold on
+%     plot(t_vec,s_NMDA_data(ind_begin:ind_end,1:10:end));
+    
+    xlim([t_begin t_end])
+    grid on
+     title(simname)
+    fig_ind=fig_ind+1;
+    xlabel('Time/s');
+    xlim([t_begin t_end])
+    fig_ind=fig_ind+1;
 end
 
 n_syn_exc=size(cal_syn_exc_data,2);
@@ -92,6 +113,7 @@ if cal_stats_plot==1
 
     xlim([t_begin t_end])
     grid on
+     title(simname)
     fig_ind=fig_ind+1;
       xlabel('Time/s');
       legend ('Potentiating','Depressing','Still')
@@ -107,7 +129,9 @@ if raster_plot==1
     xlabel('Time/s');
     xlim([t_begin t_end])
     fig_ind=fig_ind+1;
+     title(simname)
     set(gca,'FontSize',25)
+    
 end
 % figure
 % fire_count=sum(v_fire(:,ind_begin:ind_end),2);
@@ -131,12 +155,17 @@ end
 
 
 if v_plot==1
-    h(fig_ind)=figure
-    plot(t_vec,v_data(ind_begin:ind_end,1:25:end),'LineWidth',1)
+    h(fig_ind)=figure;
+    plot(t_vec,v_avg(ind_begin:ind_end),'LineWidth',1)
+    ylim([-80 30])
+    hold on
+    plot(t_vec,v_data(:,1:20:end))
     grid on
     xlim([t_begin t_end])
+%     ylim([-70 40])
     xlabel('Time/s');
     ylabel('Voltage')
+     title(simname)
     set(gca,'FontSize',25)
     fig_ind=fig_ind+1;
 end
@@ -176,9 +205,9 @@ end
 time_bin=1;
 num_bin=(t_end-t_begin)/time_bin;
 bin_size=time_bin/plot_dt;
-v_avg_data=v_avg(ind_begin:ind_end-1,:);
-v_fire_data=v_fire(:,ind_begin:ind_end-1);
-vs_data=v_data(ind_begin:ind_end-1,:);
+v_avg_data=v_avg(ind_begin:ind_end,:);
+v_fire_data=v_fire(:,ind_begin:ind_end);
+vs_data=v_data(ind_begin:ind_end,:);
 % bin_size=length(vs_data)/num_bin;
 fire_result=zeros(N_sample,num_bin);
 sync_result=zeros(1,num_bin);
@@ -264,6 +293,6 @@ end
 % ylabel('Skewness of Firing Rate Dist')
 
 if firsttime
-savefig(h,figure_name);
+ savefig(h,figure_name);
 end
 
