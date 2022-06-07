@@ -1,11 +1,11 @@
 dirname='../convtest2';
 
 if n_method==1
-    simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%gdt%geuler',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min,dt)
+    simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%gdt%geuler',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min,dt);
 elseif n_method==2
-    simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%gdt%grk4',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min,dt)
+    simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%gdt%grk4',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min,dt);
 else
-    simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%gdt%gexp',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min,dt)
+    simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%gdt%gexp',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min,dt);
 end
 
 w_exc_data=zeros(T/write_dt ,length(post_exc));

@@ -21,16 +21,19 @@ function[w,offset_list, indices,ind_pre,ind_post,conn_wind]=connection(lamda,N_n
 %     ind_pre=zeros(1,n_conn); %
 %     ind_post=zeros(1,n_conn);%
     for i = pre_idx
+        n_conn=0;
         for j = post_idx
        % rand_list=randperm(N_neuron);
         %w_ind=rand_list(1:conn_pern);
+        
         if (rand<lamda) && i ~= j
             w(i,j)=1;
-            offset_list(i+1)=offset_list(i)+1;
+            n_conn=n_conn+1;
             ind_post=[ind_post j];
             ind_pre=[ind_pre i];
             indices=[indices j];
         end
+            offset_list(i+1)=offset_list(i)+n_conn;
     end
     conn_wind=find(w==1);
     

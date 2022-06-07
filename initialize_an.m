@@ -23,10 +23,13 @@
 n_exc=ceil(N_neuron*(r_exc/(r_exc+r_inh)));exc_ind=[1:n_exc];
 n_inh=N_neuron-n_exc;inh_ind=[n_exc+1:N_neuron];
 [w_exc,offset_exc, indices_exc,pre_exc,post_exc,wind_exc]=connection(lamda,N_neuron,exc_ind,[1:N_neuron]);
-[w_inh,offset_inh, indices_inh,pre_inh,post_inh,wind_inh]=connection(lamda,N_neuron,exc_ind,[1:N_neuron]);
+[w_inh,offset_inh, indices_inh,pre_inh,post_inh,wind_inh]=connection(lamda,N_neuron,inh_ind,[1:N_neuron]);
 
-w_exc_ini=1;
-w_inh_ini=1;
+%  w_exc=[1];offset_exc=[0 1];indices_exc=[1];pre_exc=[1];post_exc=[1];wind_exc=find(w_exc==1);
+%  w_inh=[1];offset_inh=[0 1 ];indices_inh=[1];pre_inh=[1];post_inh=[1];wind_inh=find(w_inh==1);
+
+% weights_exc= w_exc_ini*ones(n_conn_exc,1);
+% weights_inh=w_inh_ini*ones(n_conn_inh,1);
 
 n_pre_exc=sum(w_exc,1);
 n_post_exc=sum(w_exc,2);
@@ -34,8 +37,7 @@ n_conn_exc=sum(n_pre_exc);
 n_pre_inh=sum(w_inh,1);
 n_post_inh=sum(w_inh,2);
 n_conn_inh=sum(n_pre_inh);
-weights_exc= w_exc_ini*ones(n_conn_exc,1);
-weights_inh=w_inh_ini*ones(n_conn_inh,1);
+
 
 %all initial conditions are taken from Tatsuki et al,2016
 v_ini=-20+60*(rand(N_neuron,1)-0.5);
@@ -51,9 +53,8 @@ s_NMDA_ini=0.001+zeros(N_neuron,1);
 x_NMDA_ini=0.001+zeros(N_neuron,1);
 s_GABA_ini=0.001+zeros(N_neuron,1);
 
-g_NMDA=0.004;%0.004;%0.0038;
+g_NMDA=0.0038;%0.004;%0.004;%0.0038;
 tau_Ca=121;
 x=[v_ini h_Na_ini n_K_ini h_A_ini m_KS_ini C_Ca_ini s_AMPA_ini ...
         s_NMDA_ini x_NMDA_ini s_GABA_ini];
-weights_exc= w_exc_ini*ones(n_conn_exc,1);
-weights_inh=w_inh_ini*ones(n_conn_inh,1);
+

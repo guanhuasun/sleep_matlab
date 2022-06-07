@@ -30,9 +30,9 @@ V_Ca = 120;
 Ar=5;Ad=0.18;
 % I_app=0;
 
-g_AMPA = 0.1;V_AMPA=0;
-g_GABA = 0.1;V_GABA=-70;
-g_NMDA=0.01;V_NMDA=0;
+g_AMPA = 0;V_AMPA=0;
+g_GABA = 0;V_GABA=-70;
+g_NMDA=0;V_NMDA=0;
 
 alpha_m = 0.1*(35 + V) ./ (1 - exp(-(35+V)/10));
 if V == -35

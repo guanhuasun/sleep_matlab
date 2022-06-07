@@ -7,8 +7,8 @@ for r_exc=[9]
 % lamda_inh=0.004*l_k;
 r_inh=1;
 % n_conn_exc=N_neuron^2*lamda_exc;n_conn_inh=N_neuron^2*lamda_inh;
-T=2000;
-write_dt=4;
+T=5000;
+write_dt=1;
 num_frame=ceil(T/write_dt);
 v_data=zeros(num_frame,N_neuron);
 g_NMDA=0.004;%0.0038;
@@ -38,7 +38,6 @@ for theta_p=[23.4]
      dname=sprintf("n%ue%ui%ulam%g",N_neuron,r_exc,r_inh,lamda);
 %      dirname=("../"+sprintf('e%ui%ulam%g',r_exc,r_inh,lamda));
      dirname=("../"+sprintf('n%ue%ui%ulam%g',N_neuron,r_exc,r_inh,lamda));
-     dirname='../hhtest';
      
     if n_method==1
         simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%gdt%geuler',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min,dt)
@@ -48,9 +47,9 @@ for theta_p=[23.4]
         simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%gdt%gexp',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min,dt)
     end
     %simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%g',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min)
-
-       simname =   'test'
-
+   
+    dirname="../antest";
+    simname="test";
     foldername=fullfile(dirname,simname);
     % foldername=sprintf('n%up%ud%ugp%ugp%utau%uw_max%gw_min%g',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min);
     %foldername=sprintf('n%up%ud%ugp%ugp%utau%u',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau);

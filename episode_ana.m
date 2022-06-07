@@ -1,7 +1,7 @@
  %close all
 %r_exc=9;
 r_inh=1;
-plot_dt=0.004; %in second
+plot_dt=write_dt/1000; %in second
 % v_avg=mean(v_data,2);
 t_begin=0;
 t_end=T/1000;
@@ -159,7 +159,7 @@ if v_plot==1
     plot(t_vec,v_avg(ind_begin:ind_end),'LineWidth',1)
     ylim([-80 30])
     hold on
-    plot(t_vec,v_data(:,1:20:end))
+%     plot(t_vec,v_data(:,1:20:end))
     grid on
     xlim([t_begin t_end])
 %     ylim([-70 40])

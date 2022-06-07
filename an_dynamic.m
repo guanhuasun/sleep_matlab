@@ -125,7 +125,7 @@ dh_Nadt=4* (alpha_h.*(1-h_Na)-beta_h.*h_Na);
 dn_Kdt = 4 * (alpha_n .* (1 - n_K) - beta_n .* n_K);
 dh_Adt = (h_Ainf - h_A)./tau_hA;
 dm_KSdt = (m_KSinf - m_KS)./tau_mKS;
-dCadt = -alphaCa .* (10 * A * I_Ca+I_NMDA) - C_Ca ./ tau_Ca;
+dCadt = -alphaCa .* (10 * A * I_Ca+I_NMDA) -C_Ca./tau_Ca;
 % if max(abs(dCadt))>100 
 %     pause
 % end

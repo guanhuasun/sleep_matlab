@@ -7,7 +7,7 @@ elseif n_method==2
 else
     xx=exp_euler_update(x,g_NMDA,tau_Ca,input_exc,input_inh,dt/2); %half step
     vv=xx(:,1); %voltage on half step
-    input_exc=syn_input(w_exc,n_pre_exc,vv);
-    input_inh=syn_input(w_inh,n_pre_inh,vv);
+    input_exc=syn_input(w_exc,n_pre_exc,vv,Vt,Kp);
+    input_inh=syn_input(w_inh,n_pre_inh,vv,Vt,Kp);
     x=exp_mid_update(x,xx,g_NMDA,tau_Ca,input_exc,input_inh,dt);
 end
