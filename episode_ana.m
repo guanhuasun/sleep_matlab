@@ -13,7 +13,7 @@ firsttime=1;
 mean_window=5; %second
 mean_window=mean_window/plot_dt; %indices 
 fig_ind=1;
-w_plot=1; w_stats_plot=0;cal_plot=1;s_plot=0;cal_stats_plot=1;raster_plot=0;v_plot=1;spec_plot=0;fire_rate_plot=0;sync_plot=0;
+w_plot=0; w_stats_plot=0;cal_plot=1;s_plot=0;cal_stats_plot=0;raster_plot=0;v_plot=1;spec_plot=1;fire_rate_plot=0;sync_plot=0;
 if firsttime
     w_exc_stats=[mean(w_exc_data,2) median(w_exc_data,2) std(w_exc_data,[],2) ];
     w_inh_stats=[mean(w_inh_data,2) median(w_inh_data,2) std(w_inh_data,[],2) ];

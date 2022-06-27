@@ -1,4 +1,4 @@
-function [vel] = an_dynamic(x,g_NMDA,tau_Ca,input_exc,input_inh,sigma_noise)%,N_neuron,old_fire_ind,with_noise)
+function [vel] = an_dynamic(x,g_NMDA,tau_Ca,input_exc,input_inh,sigma_noise,dt)%,N_neuron,old_fire_ind,with_noise)
 
 %SAN model without input
 %   x:  dimension x = (V,h_Na,n_K,h_A,m_Ks,C_Ca,s_AMPA, s_NMDA, x_NMDA, s_GABA)
@@ -113,9 +113,9 @@ I_syn=I_NMDA+I_GABA+I_AMPA;
 
 %w_i=sum_j(w_ji)/n_i, I also include the neuron itself in the average to
 %prevent that if a neuron has no connection we don't divide by zero
-
+N=length(x);
 dVdt = -(I_L+I_Na+I_K+I_A+I_KS+I_Ca+I_KCa+I_NaP+I_AR)/C...
-    -I_syn/(10*C*A);%randn*0.05;
+    -I_syn/(10*C*A)+randn(N,1)*sigma_noise*sqrt(dt);
 
 % if max(abs(dVdt))>1000 
 %     pause

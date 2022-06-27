@@ -7,7 +7,7 @@ for r_exc=[9]
 % lamda_inh=0.004*l_k;
 r_inh=1;
 % n_conn_exc=N_neuron^2*lamda_exc;n_conn_inh=N_neuron^2*lamda_inh;
-T=5000;
+T=10000;
 write_dt=1;
 num_frame=ceil(T/write_dt);
 v_data=zeros(num_frame,N_neuron);
@@ -27,17 +27,19 @@ for theta_p=[23.4]
 %     gamma_p=300;
     gamma_d=200;
     n_method=3;
-    for dt=[0.08]
-
+    for w_s=[0.1:0.1:1] 
+        dt=[0.02]
         gamma_p=[400] 
         w_min=[0];
         w_max=2;
         
       %dirname=("../"+sprintf('e%gi%g',lamda_exc,lamda_inh));
 %      dname=sprintf("e%ui%ulam%g",r_exc,r_inh,lamda);
-     dname=sprintf("n%ue%ui%ulam%g",N_neuron,r_exc,r_inh,lamda);
+   % dname=sprintf('noise1_n%uw%gdt%grk4',N_neuron,w_s,dt)
+   dname='noise_test1';
+     %dname=sprintf("n%ue%ui%ulam%g",N_neuron,r_exc,r_inh,lamda);
 %      dirname=("../"+sprintf('e%ui%ulam%g',r_exc,r_inh,lamda));
-     dirname=("../"+sprintf('n%ue%ui%ulam%g',N_neuron,r_exc,r_inh,lamda));
+    % dirname=("../"+sprintf('n%ue%ui%ulam%g',N_neuron,r_exc,r_inh,lamda));
      
     if n_method==1
         simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%gdt%geuler',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min,dt)
@@ -48,8 +50,9 @@ for theta_p=[23.4]
     end
     %simname=sprintf('n%up%ud%ugp%ugd%utau%uw_max%gw_min%g',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min)
    
-    dirname="../antest";
-    simname="test";
+    dirname=('../noise_test3_sigma1');
+    %simname='noise_test2';
+    simname=sprintf('n%uw%gdt%grk4',N_neuron,w_s,dt);
     foldername=fullfile(dirname,simname);
     % foldername=sprintf('n%up%ud%ugp%ugp%utau%uw_max%gw_min%g',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min);
     %foldername=sprintf('n%up%ud%ugp%ugp%utau%u',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau);
@@ -112,7 +115,7 @@ for theta_p=[23.4]
 
         end
         v_avg=sum(v_data,2)/N_neuron;
-        figure_name=dname+simname+".fig";
+        figure_name=simname+"3.fig";
         episode_ana;
         end
 
