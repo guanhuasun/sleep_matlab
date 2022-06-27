@@ -1,7 +1,7 @@
 clear
 N_neuron=250; %number of neurons
 % dt=0.08;
-T=10000;
+T=20000;
 %write_dt=4;
 neuron_model=2; %1 for HH, 2 for AN
 
@@ -19,26 +19,29 @@ for r_exc=[9]
             for n_method=[2]
 %                 figure
                 theta_d=[23.1];
-                for tau=20
-                    for w_s=[0.1:0.1:1]
+                for w_sigma=[0:0.05:0.3]
+                    tau=20;
+                    for w_bar=[0.1:0.1:1]
                         dt = [0.02];
                         write_dt=1;
                     if neuron_model ==1
                         initialize_hh
                     elseif neuron_model==2
                         initialize_an
-                        w_exc_ini=w_s;
+                        w_exc_ini=w_bar;
                         w_inh_ini=w_exc_ini;
-                        weights_exc= w_exc_ini*ones(n_conn_exc,1);
-                        weights_inh=w_inh_ini*ones(n_conn_inh,1);
+                        weights_exc= w_exc_ini+w_sigma*randn(n_conn_exc,1);
+                        weights_inh=w_inh_ini+w_sigma*randn(n_conn_inh,1);
+                        weights_exc(weights_exc<0)=0;
+                        weights_inh(weights_inh<0)=0;
                     end
                     gamma_d=200;
                     sigma_noise=1;
                     initialize_output;
-                    dirname=('../noise_test3_sigma1');
+                    dirname=('../w_gaussian_noise');
                     %simname='noise_test2';
                     %dirname=("../uniform_synaptic");
-                    simname=sprintf('n%uw%gdt%grk4',N_neuron,w_s,dt)
+                    simname=sprintf('n%uw%gws%gdt%grk4',N_neuron,w_bar,w_sigma,dt)
                     foldername=fullfile(dirname,simname);
                     mkdir(foldername);
                     kaiguan=0;Vt=20;Kp=2; %-20, 3 for HH; 20,2 for AN

@@ -19,7 +19,7 @@ for r_exc=[9]
             for n_method=[2]
 %                 figure
                 theta_d=[23.1];
-                for tau=20
+                for w_sigma=[0.05,0.1,0.2,0.3]
                     for w_s=[0.1:0.1:1]
                         dt = [0.02];
                         write_dt=1;
@@ -29,8 +29,10 @@ for r_exc=[9]
                         initialize_an
                         w_exc_ini=w_s;
                         w_inh_ini=w_exc_ini;
-                        weights_exc= w_exc_ini*ones(n_conn_exc,1);
-                        weights_inh=w_inh_ini*ones(n_conn_inh,1);
+                        weights_exc= w_exc_ini+w_sigma*rand(n_conn_exc,1);
+                        weights_inh=w_inh_ini+w_sigma*rand(n_conn_inh,1);
+                        weights_exc(weights_exc<0)=0;
+                        
                     end
                     gamma_d=200;
                     sigma_noise=1;
