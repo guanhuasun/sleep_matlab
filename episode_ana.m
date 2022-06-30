@@ -292,6 +292,18 @@ end
 % xlabel('Time/s')
 % ylabel('Skewness of Firing Rate Dist')
 
+figure
+
+fs=1000;
+t = (1/fs:1/fs:10)';
+xTable = timetable(seconds(t),v_avg);
+[pxx,f] = pspectrum(xTable);
+plot(f,pow2db(pxx))
+grid on
+xlabel('Frequency (Hz)')
+ylabel('Power Spectrum (dB)')
+title('Default Frequency Resolution')
+
 if firsttime
  savefig(h,figure_name);
 end

@@ -1,7 +1,7 @@
 clear
 N_neuron=250; %number of neurons
 % dt=0.08;
-T=20000;
+T=1000;
 %write_dt=4;
 neuron_model=2; %1 for HH, 2 for AN
 
@@ -47,8 +47,12 @@ for r_exc=[9]
                     kaiguan=0;Vt=20;Kp=2; %-20, 3 for HH; 20,2 for AN
                     % weights_exc=weights_exc*0.5;weights_inh=weights_inh*0.5;
                     I_app=10;
+                    total_step=ceil(T/dt);
+                    v_avg=zeros(total_step,1);
                     %result=zeros(ceil(T/write_dt),10);
-                        for t_sim=0:dt:T
+              
+                        for n_step = 1:total_step
+                            t_sim=(n_step-1)*dt;
                             v=x(:,1);
                             w_exc(wind_exc)=weights_exc; 
                             w_inh(wind_inh)=weights_inh;
@@ -70,8 +74,7 @@ for r_exc=[9]
                             if t_sim>5000
                                 kaiguan=0;
                             end
-                            %result(ind_save,:)=x;
-                           % ind_save=ind_save+1;
+                            v_avg(n_step)=mean(v);
                              save_frame;
                              
                         end

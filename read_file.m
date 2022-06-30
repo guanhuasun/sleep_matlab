@@ -54,35 +54,25 @@ for theta_p=[23.4]
     %simname='noise_test2';
     simname=sprintf('n%uw%gdt%grk4',N_neuron,w_s,dt);
     foldername=fullfile(dirname,simname);
-    % foldername=sprintf('n%up%ud%ugp%ugp%utau%uw_max%gw_min%g',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau,w_max,w_min);
-    %foldername=sprintf('n%up%ud%ugp%ugp%utau%u',N_neuron,10*theta_p,10*theta_d,gamma_p,gamma_d,tau);
-     %foldername=sprintf("n%ug%gtau_ca%uw%g",N_neuron,g_NMDA,tau_Ca,w_val);
-    %foldername="test";
+    vname=simname+"_v.mat";calname=simname+"_cal.mat";
+    vname=fullfile(foldername,char(vname));
+    calname=fullfile(foldername,char(calname));
+    
     w_excname='w_exc_data.mat';w_excname=fullfile(foldername,w_excname);
     w_inhname='w_inh_data.mat';w_inhname=fullfile(foldername,w_inhname);
     cal_excname='cal_exc_data.mat';cal_excname=fullfile(foldername,cal_excname);
     cal_inhname='cal_inh_data.mat';cal_inhname=fullfile(foldername,cal_inhname);
-      exc_conn_name='w_exc_conn.mat';exc_conn_name=fullfile(foldername,exc_conn_name);
-        inh_conn_name='w_inh_conn.mat';inh_conn_name=fullfile(foldername,inh_conn_name);
+    exc_conn_name='w_exc_conn.mat';exc_conn_name=fullfile(foldername,exc_conn_name);
+    inh_conn_name='w_inh_conn.mat';inh_conn_name=fullfile(foldername,inh_conn_name);
     syn_input_name='syn_input_data.mat';syn_input_name=fullfile(foldername,syn_input_name);
     load(w_excname); load(w_inhname);load(cal_excname);load(cal_inhname);
     load(syn_input_name);
-   exc_input_data=syn_input_data(1:2:end,:);
-   inh_input_data=syn_input_data(2:2:end,:);
+    exc_input_data=syn_input_data(1:2:end,:);
+    inh_input_data=syn_input_data(2:2:end,:);
         for ind_frame = 1:num_frame
             t_plot=(ind_frame-1)*write_dt;
-
             xname=sprintf('t%gx.mat',t_plot);xname=fullfile(foldername,xname);
-    %         w_excname=sprintf('t%gw_exc.mat',t_plot);w_excname=fullfile(foldername,w_excname);
-    %         w_inhname=sprintf('t%gw_inh.mat',t_plot);w_inhname=fullfile(foldername,w_inhname);
-    %         cal_excname=sprintf('t%gcal_exc.mat',t_plot);cal_excname=fullfile(foldername,cal_excname);
-    %         cal_inhname=sprintf('t%gcal_inh.mat',t_plot);cal_inhname=fullfile(foldername,cal_inhname);
             load(xname); 
-    %         if ind_frame==1
-    %             v_data=zeros(num_frame,N_neuron);
-    %             cal_syn_exc_data=zeros(num_frame,length(cal_syn_exc));cal_syn_inh_data=zeros(num_frame,length(cal_syn_inh));
-    %             w_exc_data=zeros(num_frame,length(cal_syn_exc));w_inh_data=zeros(num_frame,length(cal_syn_inh));
-    %         end
             v=x(:,1);
             h_Na = x(:,2);
             n_K = x(:,3);
@@ -105,18 +95,11 @@ for theta_p=[23.4]
             x_NMDA_data(ind_frame,:)=x_NMDA';
             s_GABA_data(ind_frame,:)=s_GABA';
 
-    %         cal_syn_exc_data(ind_frame,:)=cal_syn_exc';cal_syn_inh_data(ind_frame,:)=cal_syn_inh';
-    %         w_exc_data(ind_frame,:)=weights_exc';
-    %         w_inh_data(ind_frame,:)=weights_inh';
-        %     cal_syn_data(ind_frame,:)=cal_syn;
-            %histogram(weights)
-            %xlim([0,1])
-            %drawnow
-
         end
+        save(vname,'v_data');save(calname,'cal_data');
         v_avg=sum(v_data,2)/N_neuron;
-        figure_name=simname+"3.fig";
-        episode_ana;
+%         figure_name=simname+"3.fig";
+%         episode_ana;
         end
 
     end

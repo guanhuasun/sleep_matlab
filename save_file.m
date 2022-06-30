@@ -5,5 +5,7 @@ w_excname='w_exc_data.mat';w_excname=fullfile(foldername,w_excname);
 w_inhname='w_inh_data.mat';w_inhname=fullfile(foldername,w_inhname);
 cal_excname='cal_exc_data.mat';cal_excname=fullfile(foldername,cal_excname);
 cal_inhname='cal_inh_data.mat';cal_inhname=fullfile(foldername,cal_inhname);
+vname=simname+"_v.mat";vname=fullfile(foldername,char(vname));
+save(vname,'v_avg');
 save(w_excname,'w_exc_data');save(w_inhname,'w_inh_data');save(cal_excname,'cal_syn_exc_data');save(cal_inhname,'cal_syn_inh_data');
 save(syn_input_name,'syn_input_data');save(exc_conn_name,'w_exc');save(inh_conn_name,'w_inh');
