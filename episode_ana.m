@@ -1,5 +1,5 @@
  %close all
-%r_exc=9;
+r_exc=9;
 r_inh=1;
 plot_dt=write_dt/1000; %in second
 % v_avg=mean(v_data,2);
@@ -9,11 +9,11 @@ t_check=[t_begin,t_end]; %enter all time we want to check the synaptic weight di
 N_sample=250;
 N_exc=ceil(r_exc/(r_exc+r_inh)*N_sample);
 N_inh=N_sample-N_exc;
-firsttime=1;
+firsttime=0;
 mean_window=5; %second
 mean_window=mean_window/plot_dt; %indices 
 fig_ind=1;
-w_plot=0; w_stats_plot=0;cal_plot=1;s_plot=0;cal_stats_plot=0;raster_plot=0;v_plot=1;spec_plot=1;fire_rate_plot=0;sync_plot=0;
+w_plot=0; w_stats_plot=0;cal_plot=0;s_plot=0;cal_stats_plot=0;raster_plot=0;v_plot=0;spec_plot=1;fire_rate_plot=0;sync_plot=0;
 if firsttime
     w_exc_stats=[mean(w_exc_data,2) median(w_exc_data,2) std(w_exc_data,[],2) ];
     w_inh_stats=[mean(w_inh_data,2) median(w_inh_data,2) std(w_inh_data,[],2) ];
@@ -37,8 +37,8 @@ end
 t_vec=t_begin:plot_dt:t_end-plot_dt;
 ind_begin=t_begin/plot_dt+1;
 ind_end=t_end/plot_dt;
-p_line=theta_p*ones(length(t_vec),1);
-d_line=theta_d*ones(length(t_vec),1);
+% p_line=theta_p*ones(length(t_vec),1);
+% d_line=theta_d*ones(length(t_vec),1);
 
 if w_plot==1
     h(fig_ind)=figure;
@@ -100,9 +100,10 @@ if s_plot==1
     fig_ind=fig_ind+1;
 end
 
-n_syn_exc=size(cal_syn_exc_data,2);
-n_syn_inh=size(cal_syn_inh_data,2);
+
 if cal_stats_plot==1
+    n_syn_exc=size(cal_syn_exc_data,2);
+    n_syn_inh=size(cal_syn_inh_data,2);
     h(fig_ind)=figure;
     plot(t_vec,sum(cal_syn_exc_data(ind_begin:ind_end,:)>theta_p,2)/n_syn_exc);
     hold on
@@ -202,7 +203,7 @@ end
 % set(gca,'FontSize',20)
 
 
-time_bin=1;
+time_bin=0.5;
 num_bin=(t_end-t_begin)/time_bin;
 bin_size=time_bin/plot_dt;
 v_avg_data=v_avg(ind_begin:ind_end,:);
@@ -226,7 +227,8 @@ end
 
 f_up=64;
 f_ind=find(f_result==f_up);
-s_plot=spectrum_result(1:f_up,:);
+psn=spectrum_result./sum(spectrum_result);
+s_plot=psn(1:f_up,:);
 
 p_delta=sum(spectrum_result(1:4,:),1)./sum(spectrum_result,1); %delta 1-4Hz
 p_alpha=sum(spectrum_result(5:8,:),1)./sum(spectrum_result,1); %theta 4-8Hz
@@ -236,7 +238,7 @@ p_beta=sum(spectrum_result(17:32,:),1)./sum(spectrum_result,1); %beta 16-32
 
 if spec_plot ==1
     h(fig_ind)=figure
-    imagesc(t_vec,1:f_up,s_plot)
+    imagesc(t_vec,1:f_up,s_plot>0.04)
     colorbar
     pmax=max(max(s_plot));pmin=min(min(s_plot));
     plevel=20;pstep=(pmax-pmin)/20;
@@ -292,17 +294,17 @@ end
 % xlabel('Time/s')
 % ylabel('Skewness of Firing Rate Dist')
 
-figure
-
-fs=1000;
-t = (1/fs:1/fs:10)';
-xTable = timetable(seconds(t),v_avg);
-[pxx,f] = pspectrum(xTable);
-plot(f,pow2db(pxx))
-grid on
-xlabel('Frequency (Hz)')
-ylabel('Power Spectrum (dB)')
-title('Default Frequency Resolution')
+% figure
+% 
+% fs=1000;
+% t = (1/fs:1/fs:10)';
+% xTable = timetable(seconds(t),v_avg);
+% [pxx,f] = pspectrum(xTable);
+% plot(f,pow2db(pxx))
+% grid on
+% xlabel('Frequency (Hz)')
+% ylabel('Power Spectrum (dB)')
+% title('Default Frequency Resolution')
 
 if firsttime
  savefig(h,figure_name);
