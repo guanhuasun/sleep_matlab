@@ -1,5 +1,41 @@
 weight_movie=0;
-freq_movie=1;
+freq_movie=0;
+raster_movie=1;
+
+v = VideoWriter('test.avi');
+
+
+write_dt=1; %in ms
+t_begin=2000+write_dt;
+t_end=3000;%in ms
+ind_begin=floor(t_begin/write_dt);
+ind_end=ceil(t_end/write_dt);
+frame_sample=1;
+frame_num=floor((ind_end-ind_begin)/frame_sample); %total number of frames
+movie_length=50; %in seconds
+v.FrameRate=floor(frame_num/movie_length);
+open(v)
+if raster_movie==1
+    figure
+    v_grid=zeros(15,15);
+    for ind_plot=ind_begin:frame_sample:ind_end
+        for k =1:15
+            v_grid(k,:)=v_data(ind_plot,(k-1)*15+1:k*15);
+        end
+        heatmap(v_grid,'CellLabelColor','none');
+        caxis([-60,10])
+        drawnow
+        A=getframe(gcf);
+        writeVideo(v,A);
+    end
+close(v)
+    
+end
+
+
+
+
+
 if weight_movie==1
     figure
     for ind_plot = ind_begin:10:ind_end
