@@ -1,40 +1,89 @@
 weight_movie=0;
 freq_movie=0;
 raster_movie=1;
+voltage_movie=0;
+hist_movie=0;
+v = VideoWriter('35_55_firesqr_0.25speed.avi');
+%v=VideoWriter('35_55_test.mov')
 
-v = VideoWriter('test.avi');
-
-
-write_dt=1; %in ms
-t_begin=2000+write_dt;
-t_end=3000;%in ms
-ind_begin=floor(t_begin/write_dt);
-ind_end=ceil(t_end/write_dt);
+write_dt=4; %in ms
+t_begin=35; %in seconds
+t_end=55;%in seconds
+ind_begin=floor(t_begin*1000/write_dt);
+ind_end=ceil(t_end*1000/write_dt);
 frame_sample=1;
 frame_num=floor((ind_end-ind_begin)/frame_sample); %total number of frames
-movie_length=50; %in seconds
+movie_length=80; %in seconds
 v.FrameRate=floor(frame_num/movie_length);
-open(v)
+
+
+if voltage_movie==1
+    figure
+    v_movmean=movmean(v_avg,25);
+    open(v)
+    plot([t_begin:write_dt/1000:t_end],v_movmean(ind_begin:ind_end));
+    grid on
+    set(gcf,'Position',[400 400 1600 400])
+    hold on
+    g=scatter(t_begin,v_movmean(ind_plot),'LineWidth',2.5);
+    
+    for ind_plot=ind_begin:frame_sample:ind_end
+        t_plot=ind_plot*write_dt/1000;
+        set(g,'xdata',t_plot,'ydata',v_movmean(ind_plot));
+        drawnow
+        title(sprintf('t=%g',t_plot));
+        A=getframe(gcf);
+        writeVideo(v,A);
+    end
+close(v)
+end
+
 if raster_movie==1
     figure
+    open(v)
     v_grid=zeros(15,15);
     for ind_plot=ind_begin:frame_sample:ind_end
+        t_plot=ind_plot*write_dt/1000;
         for k =1:15
             v_grid(k,:)=v_data(ind_plot,(k-1)*15+1:k*15);
         end
         heatmap(v_grid,'CellLabelColor','none');
-        caxis([-60,10])
+        grid off
+        caxis([-60,0])
+        colormap(greenMap)
         drawnow
         A=getframe(gcf);
         writeVideo(v,A);
     end
 close(v)
-    
 end
 
 
 
 
+if hist_movie==1
+    open(v)
+    figure
+    subplot(3,1,3)
+    plot([t_begin:write_dt/1000:t_end],v_movmean(ind_begin:ind_end));
+    hold on
+    g=scatter(t_begin,v_movmean(ind_plot),'LineWidth',2.5);
+    for ind_plot=ind_begin:frame_sample:ind_end
+        t_plot=ind_plot*write_dt/1000;
+        subplot(3,1,1)
+        %histogram(w_exc_data(ind_plot,:));
+        histogram(w_exc_data(ind_plot,:));
+        subplot(3,1,2)
+        %histogram(w_inh_data(ind_plot,:));
+        set(g,'xdata',t_plot,'ydata',v_movmean(ind_plot));
+        drawnow
+        title(sprintf('t=%g',t_plot));
+        set(gcf,'Position',[200 200 1600 1000])
+        A=getframe(gcf);
+        writeVideo(v,A);
+    end
+close(v)
+end
 
 if weight_movie==1
     figure
